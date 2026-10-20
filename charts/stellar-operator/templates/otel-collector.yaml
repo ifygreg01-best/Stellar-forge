@@ -1,4 +1,4 @@
-{{- if .Values.otel.collector.enabled }}
+{{- if ((.Values.otel.collector).enabled) }}
 # OTel Collector — receives OTLP spans from the operator and forwards them to
 # Honeycomb, Jaeger, or Grafana Tempo depending on values.yaml configuration.
 ---

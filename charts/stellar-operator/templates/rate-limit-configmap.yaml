@@ -53,6 +53,6 @@ data:
         scaleDownThresholdPercent: {{ .Values.rateLimiting.egressSaping.dynamicScaling.scaleDownThresholdPercent | default 30 }}
         adjustIntervalSeconds: {{ .Values.rateLimiting.egressSaping.dynamicScaling.adjustIntervalSeconds | default 30 }}
       podSelector:
-        {{- toYAml .Values.rateLimiting.egressSaping.podSelector | nIndent 8 }}
+        {{- toYaml .Values.rateLimiting.egressSaping.podSelector | nindent 8 }}
     {{- end }}
 {{- end }}

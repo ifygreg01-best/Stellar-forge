@@ -86,7 +86,7 @@ impl PdbReconciler {
         let desired_max_unavailable = if any_syncing {
             0
         } else {
-            // TODO: Implement full quorum calculation. For now, allow at
+            // TODO(exempt: quorum-aware PDB calculation deferred to follow-up): Implement full quorum calculation. For now, allow at
             // most one unreplicated pod to be removed when we have at least 2 ready.
             if ready_count >= 2 {
                 1

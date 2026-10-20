@@ -44,7 +44,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: contracts/royalty-splitter
-          shared-key: "contracts-royalty-splitter"
+          shared-key: "ci-royalty-splitter"
 
       - name: Install Stellar CLI
         run: |

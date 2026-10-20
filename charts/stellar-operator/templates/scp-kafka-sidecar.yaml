@@ -1,4 +1,4 @@
-{{- if .Values.scpAnalytics.enabled }}
+{{- if ((.Values.scpAnalytics).enabled) }}
 ---
 # ConfigMap for SCP Kafka streaming configuration
 apiVersion: v1

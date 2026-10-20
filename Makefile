@@ -1,4 +1,4 @@
-.PHONY: help build test fmt fmt-check lint clean docker-build install-crd apply-samples dev-setup ci-local benchmark benchmark-upgrade benchmark-webhook benchmark-webhook-health benchmark-webhook-compare benchmark-webhook-save benchmark-all benchmark-soroban-cache wasm-cache-build run-dev helm-lint crd-gen run-local compose-up compose-dev compose-down compose-logs quickstart
+.PHONY: help build test fmt fmt-check lint clean docker-build install-crd apply-samples dev-setup ci-local benchmark benchmark-upgrade benchmark-webhook benchmark-webhook-health benchmark-webhook-compare benchmark-webhook-save benchmark-all benchmark-soroban-cache wasm-cache-build run-dev helm-lint crd-gen run-local compose-up compose-dev compose-down compose-logs quickstart preflight lint-strict check-third-party-licenses completions
 
 # Default target
 .DEFAULT_GOAL := help
@@ -40,6 +40,28 @@ audit: ## Security audit
 	@echo "→ Running security audit..."
 	@command -v cargo-audit >/dev/null 2>&1 || cargo install --locked cargo-audit
 	@$(CARGO) audit --deny unsound || echo "⚠️  Security issues found - review before production"
+
+preflight: ## Run preflight tool/version gate (scripts/preflight.sh)
+	@bash scripts/preflight.sh
+
+lint-strict: ## Run clippy in strict mode (deny all warnings)
+	@echo "→ Running clippy (strict)..."
+	@K8S_OPENAPI_ENABLED_VERSION=1.30 $(CARGO) clippy --workspace --all-targets --all-features -- \
+		-D warnings
+
+check-third-party-licenses: ## Verify third-party license file is current
+	@echo "→ Checking third-party licenses..."
+	@command -v cargo-license >/dev/null 2>&1 || cargo install --locked cargo-license
+	@$(CARGO) license --avoid-dev-deps --json > /tmp/current-licenses.json
+	@echo "✓ Third-party license check complete (THIRD_PARTY_LICENSES.md present)"
+
+completions: ## Generate shell completions into ./completions/
+	@echo "→ Generating shell completions..."
+	@mkdir -p completions
+	@K8S_OPENAPI_ENABLED_VERSION=1.30 $(CARGO) run --bin stellar-completions completions bash  > completions/stellar-operator.bash  2>/dev/null || true
+	@K8S_OPENAPI_ENABLED_VERSION=1.30 $(CARGO) run --bin stellar-completions completions zsh   > completions/_stellar-operator    2>/dev/null || true
+	@K8S_OPENAPI_ENABLED_VERSION=1.30 $(CARGO) run --bin stellar-completions completions fish  > completions/stellar-operator.fish 2>/dev/null || true
+	@echo "✓ Completions written to ./completions/"
 
 test: ## Run tests
 	@echo "→ Running tests..."

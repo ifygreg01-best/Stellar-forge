@@ -236,5 +236,53 @@ required-features = ["rest-api", "metrics"]
 name = "stellar-metrics-proxy"
 path = "src/bin/stellar-metrics-proxy.rs"
 
+[[bin]]
+name = "conventional-commit-check"
+path = "src/bin/conventional-commit-check.rs"
+
+[[bin]]
+name = "changelog-gen"
+path = "src/bin/changelog-gen.rs"
+
+[[bin]]
+name = "backup-verify"
+path = "src/bin/backup-verify.rs"
+
+[[bin]]
+name = "stellar-bootstrap-verify"
+path = "src/bin/stellar-bootstrap-verify.rs"
+
+[[bin]]
+name = "stellar-scaffold"
+path = "src/bin/stellar-scaffold.rs"
+
+[[bin]]
+name = "stellar-logs"
+path = "src/bin/stellar-logs.rs"
+
+[[bin]]
+name = "stellar-health-sidecar"
+path = "src/bin/stellar-health-sidecar.rs"
+
+[[bin]]
+name = "stellar-log-shipper"
+path = "src/bin/stellar-log-shipper.rs"
+
+[[bin]]
+name = "doc_check"
+path = "src/bin/doc_check.rs"
+
+[[bin]]
+name = "check_pipeline_log_redaction"
+path = "src/bin/check_pipeline_log_redaction.rs"
+
+[[bin]]
+name = "check_unreachable_modules"
+path = "src/bin/check_unreachable_modules.rs"
+
+[[bin]]
+name = "crdgen"
+path = "src/bin/crdgen.rs"
+
 [workspace]
 members = ["wasm-plugins", "telemetry", "security/p2p-firewall"]

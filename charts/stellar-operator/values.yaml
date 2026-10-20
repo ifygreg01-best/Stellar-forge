@@ -319,6 +319,12 @@ security:
     failurePolicy: Fail
   imagePolicy:
     allowLatestTag: false
+  egressShaper:
+    enabled: false
+    internalRate: "10gbit"
+    externalRate: "1gbit"
+    burst: "32kb"
+    internalSubnets: []
 
 # Network Isolation — prevents cross-network traffic between Mainnet and Testnet namespaces.
 #
@@ -469,7 +475,7 @@ otel:
 #
 # The operator polls the primary cluster's health endpoints every 500ms, and
 # once the anti-flapping threshold is met, promotes the Patroni replica and
-  remaps the global DNS record to the passive cluster.
+# remaps the global DNS record to the passive cluster.
 #
 # Quick start:
 #   1. Set failover.enabled=true
@@ -514,7 +520,7 @@ failover:
     # Health endpoints that the global watcher polls.
     healthEndpoints:
       - "https://primary.stellar.org/health"
-      -https://primary.stellar.org/health
+      - "https://primary.stellar.org/health"
     # Patroni REST API endpoint for the primary PostgreSQL cluster.
     patroniEndpoint: "https://patroni-primary.stellar.org"
 
@@ -565,3 +571,87 @@ failover:
     requests:
       cpu: 50m
       memory: 64Mi
+
+# SCP Analytics / Kafka streaming (disabled by default)
+scpAnalytics:
+  enabled: false
+
+# Horizon HPA (disabled by default)
+horizonHpa:
+  enabled: false
+
+# Byzantine Watcher (disabled by default)
+byzantineWatcher:
+  enabled: false
+
+# GitOps Secrets (SOPS/SealedSecrets injection, disabled by default)
+gitopsSecrets:
+  enabled: false
+  tmpfsSizeLimit: "16Mi"
+  mountPath: "/var/run/stellar/gitops-secrets"
+
+# Cross-region failover settings (disabled by default)
+crossRegion:
+  enabled: false
+
+# Feature flags (runtime toggles)
+featureFlags:
+  rollouts: false
+
+# Extra pod annotations
+extraAnnotations: {}
+
+# OTel Collector sidecar (disabled by default)
+# otel.collector sub-section — main otel.enabled is defined above
+# These are evaluated only when otel.collector.enabled is true
+
+# Monitoring stack (Prometheus/ServiceMonitor, disabled by default)
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+  prometheusRule:
+    enabled: false
+    certAlerts: false
+
+# Horizon HPA (auto-scaling for Horizon nodes, disabled by default)
+horizonHpa:
+  enabled: false
+  namespace: "stellar"
+  stellarNodeName: ""
+  targetDeployment: ""
+  minReplicas: 1
+  maxReplicas: 10
+  tpsTargetPerReplica: 100
+  queueLengthTarget: 10
+  scaleUpStabilizationSeconds: 60
+  scaleDownStabilizationSeconds: 300
+
+# Byzantine Watcher (cross-node anomaly detection, disabled by default)
+byzantineWatcher:
+  enabled: false
+  defaultNetwork: "testnet"
+  logLevel: "info"
+  metricsPort: 9091
+  pollIntervalSecs: 30
+  requestTimeoutSecs: 10
+  regions: []
+  image:
+    repository: "ghcr.io/otowoorg/stellar-k8s/byzantine-watcher"
+    tag: "latest"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+# SCP Analytics / Kafka streaming (disabled by default)
+scpAnalytics:
+  enabled: false
+  kafka:
+    brokers: []
+    topic: "stellar-scp"
+  consumer:
+    groupId: "stellar-scp-consumer"
